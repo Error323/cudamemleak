@@ -4,6 +4,4 @@
 
 SET(SOURCES
   src/main.cpp
-  src/process.cu
-  src/init.cu
 )
