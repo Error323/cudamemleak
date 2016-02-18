@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -19,9 +20,9 @@ int main(void)
   for (int i = 0; i < w*h; i++)
     img[i] = 1.0f;
 
-  int N = 10000000;
+  int N = 1;
   for (int i = 0; i < N; i++)
-    process(img, res, w, h, i);
+    process(img, res, w, h, M_PI/4.0f);
 
   for (int i = 0; i < h; i++)
   {
