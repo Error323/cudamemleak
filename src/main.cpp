@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include "transform.h"
+#include "demosaic.h"
 
 using namespace std;
 
@@ -16,13 +16,14 @@ int main(void)
   int h = 64;
   float img[w*h];
   float res[w*h];
+  gpu::Demosaic::Instance()->Initialize();
 
   for (int i = 0; i < w*h; i++)
     img[i] = 1.0f;
 
   int N = 1;
   for (int i = 0; i < N; i++)
-    process(img, res, w, h, M_PI/4.0f);
+    gpu::Demosaic::Instance()->Process(img, res, w, h, M_PI/4.0f);
 
   for (int i = 0; i < h; i++)
   {
@@ -30,5 +31,7 @@ int main(void)
       printf("%i ", int(res[i*w+j]));
     printf("\n");
   }
+
+  gpu::Demosaic::Release();
   return 0;
 }

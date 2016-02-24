@@ -3,6 +3,6 @@
 #-------------------------------------------------------------------------------
 
 SET(SOURCES
-  src/transform.cu
+  src/demosaic.cu
   src/main.cpp
 )

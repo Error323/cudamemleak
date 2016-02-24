@@ -1,14 +1,24 @@
 #include <math.h>
-#include <cuda_runtime_api.h>
-#include <curand_kernel.h>
+#include <stdio.h>
+
+#include "demosaic.h"
 
 #define BLOCK 32
 
+namespace gpu {
 static texture<float, cudaTextureType2D, cudaReadModeElementType> gTex;
+Demosaic *Demosaic::sInstance = 0x0;
 
-/**
- * Rotates an image
- */
+void Demosaic::Initialize() 
+{
+  chan_desc = cudaCreateChannelDesc<float>();
+}
+
+Demosaic::~Demosaic()
+{
+  printf("Destroyed Demosaic\n");
+}
+
 __global__ void transform(float *dst, int w, int h, float a)
 {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -28,10 +38,8 @@ __global__ void transform(float *dst, int w, int h, float a)
   dst[y*w+x] = tex2D(gTex, tu, tv);
 }
 
-void process(const float *src, float *dst, int w, int h, float a)
+void Demosaic::Process(const float *src, float *dst, int w, int h, float a)
 {
-  cudaChannelFormatDesc chan_desc = cudaCreateChannelDesc<float>();
-  cudaArray *cu_array;
   cudaMallocArray(&cu_array, &chan_desc, w, h);
   cudaMemcpyToArray(cu_array, 0, 0, src, w*h*sizeof(float), cudaMemcpyHostToDevice);
 
@@ -53,3 +61,4 @@ void process(const float *src, float *dst, int w, int h, float a)
   cudaFreeArray(cu_array);
   cudaFree(output);
 }
+} // namespace gpu
